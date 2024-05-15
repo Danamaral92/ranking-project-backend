@@ -1,0 +1,38 @@
+version: '3'
+services:
+
+  app:
+    build: .
+    container_name: ranking_app
+    ports:
+      - "5001:5001"
+    environment:
+      SERVER_PORT: 5001
+      POSTGRES_HOST: postgresdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ranking-db
+      PGPORT: 5432
+
+    restart: always
+    depends_on:
+      postgresdb:
+        condition: service_healthy
+
+  postgresdb:
+    image: postgres:15.5-bullseye
+    hostname: postgresdb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ranking-db
+    volumes:
+      - ./volumes/postgres-ranking-app:/var/lib/postgresql/data
+
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -q -U postgres -d ranking-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
