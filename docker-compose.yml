@@ -5,9 +5,9 @@ services:
     build: .
     container_name: ranking_api
     ports:
-      - "5001:5001"
+      - "5003:5003"
     environment:
-      SERVER_PORT: 5001
+      SERVER_PORT: 5003
       POSTGRES_HOST: postgresdb
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -40,7 +40,7 @@ services:
     build:
       context: ./src/main/client/
       args:
-        API_URL: http://localhost:5001
+        API_URL: http://localhost:5003
     container_name: ranking_app_front
     ports:
       - "5002:5002"
